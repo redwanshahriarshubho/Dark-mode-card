@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dark Mode Card</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-white text-gray-800 transition duration-500" id="body">
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="max-w-sm w-full p-6 bg-gray-100 rounded-xl shadow-md text-center" id="card">
+      
+      <img class ="w-24 h-24 rounded-full mx-auto" src="img/Redwan.jpg" alt="Redwan">
+      <p class="text-gray-600">Frontend Developer</p>
+      <button 
+        id="toggle-btn"
+        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+      >
+        Toggle Dark Mode
+      </button>
+    </div>
+  </div>
+
+  <!-- Link to JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
