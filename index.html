@@ -92,10 +92,6 @@
       <!-- Grid -->
       <main class="max-w-6xl mx-auto">
         <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-
-        <div class="mt-6 flex justify-center">
-          <button id="downloadJSON" class="px-4 py-2 rounded-lg bg-green-500 text-white">Download JSON</button>
-        </div>
       </main>
 
       <!-- Modal (hidden by default) -->
@@ -126,7 +122,6 @@
       const search = document.getElementById('search');
       const skillFilter = document.getElementById('skill-filter');
       const shuffleBtn = document.getElementById('shuffleBtn');
-      const downloadJSON = document.getElementById('downloadJSON');
 
       // Modal
       const modal = document.getElementById('modal');
@@ -261,12 +256,6 @@
         applyFilters();
       });
 
-      // Download JSON
-      downloadJSON.addEventListener('click', ()=>{
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(profiles, null, 2));
-        const a = document.createElement('a'); a.href = dataStr; a.download = 'profiles-30.json'; a.click();
-      });
-
       // Theme handling (persistent & respects system)
       const savedTheme = localStorage.getItem('theme') || null;
       function applyTheme(t){
@@ -294,5 +283,4 @@
 
     </script>
   </body>
-</html>< ! - -   P R   t e s t   - - >  
- 
+</html>
