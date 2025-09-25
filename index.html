@@ -1,31 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <title>Dark Mode Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enhanced Dark Mode Card</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Link to external CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-in-out',
+            'bounce-gentle': 'bounceGentle 1s infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            bounceGentle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
-<body class="bg-white text-gray-800 transition duration-500" id="body">
-  <div class="min-h-screen flex items-center justify-center">
-    <div class="max-w-sm w-full p-6 bg-gray-100 rounded-xl shadow-md text-center" id="card">
-      
-      <img class ="w-24 h-24 rounded-full mx-auto" src="img/Redwan.jpg" alt="Redwan">
-      <p class="text-gray-600">Frontend Developer</p>
-      <button 
-        id="toggle-btn"
-        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-      >
-        Toggle Dark Mode
-      </button>
+
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-500">
+  <div class="min-h-screen flex items-center justify-center p-4">
+    <div
+      class="max-w-md w-full p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl transition-all duration-500 transform hover:scale-105">
+      <div class="text-center">
+        <div class="relative inline-block mb-6">
+          <img class="w-32 h-32 rounded-full mx-auto border-4 border-blue-500 dark:border-blue-400 shadow-lg"
+            src="img/Redwan.jpg" alt="Redwan">
+          <div
+            class="absolute bottom-2 right-2 bg-green-500 rounded-full w-8 h-8 flex items-center justify-center border-2 border-white dark:border-gray-800">
+            <i class="fas fa-check text-white text-xs"></i>
+          </div>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-2">Redwan Islam</h2>
+        <p class="text-blue-600 dark:text-blue-400 font-medium mb-4">Frontend Developer</p>
+
+        <div class="flex justify-center space-x-4 mb-6">
+          <a href="#"
+            class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+            <i class="fab fa-github text-xl"></i>
+          </a>
+          <a href="#"
+            class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+            <i class="fab fa-linkedin text-xl"></i>
+          </a>
+          <a href="#"
+            class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+            <i class="fab fa-twitter text-xl"></i>
+          </a>
+          <a href="#"
+            class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
+            <i class="fas fa-envelope text-xl"></i>
+          </a>
+        </div>
+
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
+          Passionate about creating beautiful, responsive web experiences with modern technologies.
+        </p>
+
+        <div class="flex justify-center space-x-4 mb-6">
+          <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
+            HTML/CSS
+          </span>
+          <span
+            class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
+            JavaScript
+          </span>
+          <span
+            class="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
+            React
+          </span>
+        </div>
+
+        <button id="toggle-btn"
+          class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 flex items-center justify-center mx-auto">
+          <i class="fas fa-moon mr-2" id="theme-icon"></i>
+          <span id="theme-text">Dark Mode</span>
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Link to JavaScript -->
-  <script src="script.js"></script>
+  <script>
+    // DOM Elements
+    const toggleBtn = document.getElementById('toggle-btn');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+
+    // Apply the saved theme on page load
+    if (currentTheme === 'dark') {
+      html.classList.add('dark');
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+      themeText.textContent = 'Light Mode';
+    }
+
+    // Toggle theme function
+    function toggleTheme() {
+      // Check if dark mode is currently active
+      const isDark = html.classList.contains('dark');
+
+      if (isDark) {
+        // Switch to light mode
+        html.classList.remove('dark');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        themeText.textContent = 'Dark Mode';
+        localStorage.setItem('theme', 'light');
+      } else {
+        // Switch to dark mode
+        html.classList.add('dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        themeText.textContent = 'Light Mode';
+        localStorage.setItem('theme', 'dark');
+      }
+
+      // Add a subtle animation to the button
+      toggleBtn.classList.add('animate-bounce-gentle');
+      setTimeout(() => {
+        toggleBtn.classList.remove('animate-bounce-gentle');
+      }, 1000);
+    }
+
+    // Event listener for toggle button
+    toggleBtn.addEventListener('click', toggleTheme);
+
+    // Check for system preference if no saved preference
+    if (!localStorage.getItem('theme')) {
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+      if (prefersDarkScheme.matches) {
+        html.classList.add('dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        themeText.textContent = 'Light Mode';
+        localStorage.setItem('theme', 'dark');
+      }
+
+      // Listen for system preference changes
+      prefersDarkScheme.addEventListener('change', (e) => {
+        if (e.matches) {
+          html.classList.add('dark');
+          themeIcon.classList.remove('fa-moon');
+          themeIcon.classList.add('fa-sun');
+          themeText.textContent = 'Light Mode';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          html.classList.remove('dark');
+          themeIcon.classList.remove('fa-sun');
+          themeIcon.classList.add('fa-moon');
+          themeText.textContent = 'Dark Mode';
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    }
+
+    // Add fade-in animation to the card
+    document.addEventListener('DOMContentLoaded', () => {
+      const card = document.querySelector('.max-w-md');
+      card.classList.add('animate-fade-in');
+    });
+  </script>
 </body>
+
 </html>
