@@ -177,9 +177,8 @@
           role: (i%5===0) ? 'Frontend Developer' : (i%5===1) ? 'UI Engineer' : (i%5===2) ? 'React Developer' : (i%5===3) ? 'Web Designer' : 'Fullstack Intern',
           bio: base.bio,
           skills: skillsSet[i%skillsSet.length],
-          // You can add your image path here, e.g., `img/redwan${idx}.jpg`
-          // For now, we'll leave it as null to use the placeholder
-          avatar: null,
+          // Use a placeholder image for now - user can replace with their own
+          avatar: `https://picsum.photos/seed/redwan${idx}/200/200.jpg`,
           socials: base.socials
         }
       });
@@ -199,12 +198,13 @@
           const card = document.createElement('article');
           card.className = 'tilt card-gradient rounded-2xl p-5 shadow-xl hover:shadow-2xl transition transform duration-300 bg-white dark:bg-gray-800';
           
-          // Create image placeholder or actual image if available
-          const imageElement = p.avatar 
-            ? `<img src="img" alt="${p.name}" class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-md" />`
-            : `<div class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-md img-placeholder">
-                 <span>Add Image</span>
-               </div>`;
+          // Create image element with error handling
+          const imageElement = `
+            <img src="${p.avatar}" 
+                 alt="${p.name}" 
+                 class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-md object-cover"
+                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\"w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-md img-placeholder\\"><span>Add Image</span></div>'" />
+          `;
           
           card.innerHTML = `
             <div class="flex items-center gap-4">
@@ -256,12 +256,13 @@
         modalBio.textContent = p.bio;
         modalTags.innerHTML = p.skills.map(s=>`<span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 mr-2">${s}</span>`).join(' ');
         
-        // Update modal image
-        if (p.avatar) {
-          modalImgContainer.innerHTML = `<img src="${p.avatar}" alt="${p.name}" class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-lg" />`;
-        } else {
-          modalImgContainer.innerHTML = `<span>Add Image</span>`;
-        }
+        // Update modal image with error handling
+        modalImgContainer.innerHTML = `
+          <img src="${p.avatar}" 
+               alt="${p.name}" 
+               class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-lg object-cover"
+               onerror="this.onerror=null; this.parentElement.innerHTML='<span>Add Image</span>'" />
+        `;
         
         modal.classList.remove('hidden'); modal.classList.add('flex');
       }
