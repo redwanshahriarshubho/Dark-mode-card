@@ -177,8 +177,8 @@
           role: (i%5===0) ? 'Frontend Developer' : (i%5===1) ? 'UI Engineer' : (i%5===2) ? 'React Developer' : (i%5===3) ? 'Web Designer' : 'Fullstack Intern',
           bio: base.bio,
           skills: skillsSet[i%skillsSet.length],
-          // Use a placeholder image for now - user can replace with their own
-          avatar: `https://picsum.photos/seed/redwan${idx}/200/200.jpg`,
+          // Use local image path - user will replace with their own images
+          avatar: `img/redwan${idx}.jpg`,
           socials: base.socials
         }
       });
@@ -198,12 +198,12 @@
           const card = document.createElement('article');
           card.className = 'tilt card-gradient rounded-2xl p-5 shadow-xl hover:shadow-2xl transition transform duration-300 bg-white dark:bg-gray-800';
           
-          // Create image element with error handling
+          // Create image element with local path and error handling
           const imageElement = `
             <img src="${p.avatar}" 
                  alt="${p.name}" 
                  class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-md object-cover"
-                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\"w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-md img-placeholder\\"><span>Add Image</span></div>'" />
+                 onerror="this.onerror=null; this.src='img/placeholder.jpg';" />
           `;
           
           card.innerHTML = `
@@ -261,7 +261,7 @@
           <img src="${p.avatar}" 
                alt="${p.name}" 
                class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-lg object-cover"
-               onerror="this.onerror=null; this.parentElement.innerHTML='<span>Add Image</span>'" />
+               onerror="this.onerror=null; this.src='img/placeholder.jpg';" />
         `;
         
         modal.classList.remove('hidden'); modal.classList.add('flex');
