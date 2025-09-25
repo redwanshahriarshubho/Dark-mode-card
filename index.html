@@ -1,191 +1,298 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Enhanced Dark Mode — 30 Profile Cards</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enhanced Dark Mode Card</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Tailwind Config -->
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          animation: {
-            'fade-in': 'fadeIn 0.5s ease-in-out',
-            'bounce-gentle': 'bounceGentle 1s infinite',
-          },
-          keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' },
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            animation: {
+              'fade-in': 'fadeIn 0.45s ease-in-out',
+              'float-slow': 'floatSlow 6s ease-in-out infinite',
+              'pop': 'pop .25s ease-out',
             },
-            bounceGentle: {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-10px)' },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(6px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' }
+              },
+              floatSlow: {
+                '0%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-6px)' },
+                '100%': { transform: 'translateY(0)' }
+              },
+              pop: {
+                '0%': { transform: 'scale(.98)' },
+                '100%': { transform: 'scale(1)' }
+              }
             }
           }
         }
       }
-    }
-  </script>
+    </script>
 
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-</head>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-500">
-  <div class="min-h-screen flex items-center justify-center p-4">
-    <div
-      class="max-w-md w-full p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl transition-all duration-500 transform hover:scale-105">
-      <div class="text-center">
-        <div class="relative inline-block mb-6">
-          <img class="w-32 h-32 rounded-full mx-auto border-4 border-blue-500 dark:border-blue-400 shadow-lg"
-            src="img/Redwan.jpg" alt="Redwan">
-          <div
-            class="absolute bottom-2 right-2 bg-green-500 rounded-full w-8 h-8 flex items-center justify-center border-2 border-white dark:border-gray-800">
-            <i class="fas fa-check text-white text-xs"></i>
+    <style>
+      /* small helpful tweaks */
+      .card-gradient {
+        background-image: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(0,0,0,0.03));
+      }
+      /* subtle card 3d tilt effect (prefers-reduced-motion friendly) */
+      .tilt {
+        transform-style: preserve-3d;
+        perspective: 900px;
+        transition: transform .25s ease;
+      }
+      .tilt:hover { transform: rotateX(4deg) rotateY(-6deg) translateY(-6px); }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+    <div class="min-h-screen p-6 md:p-10 lg:p-16">
+      <!-- Header / Controls -->
+      <header class="max-w-6xl mx-auto mb-8">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold">Profiles — 30 merged cards</h1>
+            <p class="text-sm text-gray-600 dark:text-gray-300/80 mt-1">Beautiful responsive grid with search, filters, and a persistent dark-mode toggle.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative">
+              <input id="search" type="search" placeholder="Search name, role or skill..."
+                class="w-60 md:w-72 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
+              <i class="fas fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+
+            <select id="skill-filter" class="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+              <option value="all">All skills</option>
+            </select>
+
+            <button id="shuffleBtn" class="px-3 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow hover:scale-105 transform transition">Shuffle</button>
+
+            <button id="toggle-btn" aria-label="Toggle dark mode"
+              class="px-3 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow flex items-center gap-2">
+              <i class="fas fa-moon" id="theme-icon"></i>
+              <span id="theme-text" class="text-sm">Dark Mode</span>
+            </button>
           </div>
         </div>
+      </header>
 
-        <h2 class="text-2xl font-bold mb-2">Redwan Islam</h2>
-        <p class="text-blue-600 dark:text-blue-400 font-medium mb-4">Frontend Developer</p>
+      <!-- Grid -->
+      <main class="max-w-6xl mx-auto">
+        <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
 
-        <div class="flex justify-center space-x-4 mb-6">
-          <a href="#"
-            class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
-            <i class="fab fa-github text-xl"></i>
-          </a>
-          <a href="#"
-            class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
-            <i class="fab fa-linkedin text-xl"></i>
-          </a>
-          <a href="#"
-            class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
-            <i class="fab fa-twitter text-xl"></i>
-          </a>
-          <a href="#"
-            class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
-            <i class="fas fa-envelope text-xl"></i>
-          </a>
+        <div class="mt-6 flex justify-center">
+          <button id="downloadJSON" class="px-4 py-2 rounded-lg bg-green-500 text-white">Download JSON</button>
         </div>
+      </main>
 
-        <p class="text-gray-600 dark:text-gray-300 mb-6">
-          Passionate about creating beautiful, responsive web experiences with modern technologies.
-        </p>
-
-        <div class="flex justify-center space-x-4 mb-6">
-          <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
-            HTML/CSS
-          </span>
-          <span
-            class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
-            JavaScript
-          </span>
-          <span
-            class="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
-            React
-          </span>
+      <!-- Modal (hidden by default) -->
+      <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-xl w-full p-6">
+          <div class="flex items-start gap-4">
+            <img id="modal-img" class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-lg" src="" alt="avatar" />
+            <div class="flex-1">
+              <h3 id="modal-name" class="text-xl font-bold">Name</h3>
+              <p id="modal-role" class="text-sm text-gray-600 dark:text-gray-300/80">Role</p>
+              <p id="modal-bio" class="mt-3 text-sm text-gray-700 dark:text-gray-200">Bio</p>
+              <div id="modal-tags" class="mt-3 flex flex-wrap gap-2"></div>
+            </div>
+            <button id="modal-close" class="ml-2 text-gray-500 hover:text-gray-800 dark:hover:text-white"><i class="fas fa-xmark text-2xl"></i></button>
+          </div>
         </div>
-
-        <button id="toggle-btn"
-          class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 flex items-center justify-center mx-auto">
-          <i class="fas fa-moon mr-2" id="theme-icon"></i>
-          <span id="theme-text">Dark Mode</span>
-        </button>
       </div>
+
     </div>
-  </div>
 
-  <script>
-    // DOM Elements
-    const toggleBtn = document.getElementById('toggle-btn');
-    const themeIcon = document.getElementById('theme-icon');
-    const themeText = document.getElementById('theme-text');
-    const html = document.documentElement;
+    <script>
+      // Elements
+      const html = document.documentElement;
+      const toggleBtn = document.getElementById('toggle-btn');
+      const themeIcon = document.getElementById('theme-icon');
+      const themeText = document.getElementById('theme-text');
+      const grid = document.getElementById('grid');
+      const search = document.getElementById('search');
+      const skillFilter = document.getElementById('skill-filter');
+      const shuffleBtn = document.getElementById('shuffleBtn');
+      const downloadJSON = document.getElementById('downloadJSON');
 
-    // Check for saved theme preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') || 'light';
+      // Modal
+      const modal = document.getElementById('modal');
+      const modalImg = document.getElementById('modal-img');
+      const modalName = document.getElementById('modal-name');
+      const modalRole = document.getElementById('modal-role');
+      const modalBio = document.getElementById('modal-bio');
+      const modalTags = document.getElementById('modal-tags');
+      const modalClose = document.getElementById('modal-close');
 
-    // Apply the saved theme on page load
-    if (currentTheme === 'dark') {
-      html.classList.add('dark');
-      themeIcon.classList.remove('fa-moon');
-      themeIcon.classList.add('fa-sun');
-      themeText.textContent = 'Light Mode';
-    }
+      // Utils
+      function uid(n){ return Math.random().toString(36).slice(2,2+n); }
 
-    // Toggle theme function
-    function toggleTheme() {
-      // Check if dark mode is currently active
-      const isDark = html.classList.contains('dark');
+      // base profile data to clone — updated name to "Redwan Shahriar Shubho"
+      const base = {
+        name: 'Redwan Shahriar Shubho',
+        role: 'Frontend Developer',
+        bio: 'Passionate about creating beautiful, responsive web experiences with modern technologies. Loves clean UI and accessible components.',
+        skills: ['HTML', 'CSS', 'JavaScript', 'React'],
+        socials: { github: '#', linkedin: '#', twitter: '#', email: '#' }
+      };
 
-      if (isDark) {
-        // Switch to light mode
-        html.classList.remove('dark');
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
-        themeText.textContent = 'Dark Mode';
-        localStorage.setItem('theme', 'light');
-      } else {
-        // Switch to dark mode
-        html.classList.add('dark');
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-        themeText.textContent = 'Light Mode';
-        localStorage.setItem('theme', 'dark');
-      }
-
-      // Add a subtle animation to the button
-      toggleBtn.classList.add('animate-bounce-gentle');
-      setTimeout(() => {
-        toggleBtn.classList.remove('animate-bounce-gentle');
-      }, 1000);
-    }
-
-    // Event listener for toggle button
-    toggleBtn.addEventListener('click', toggleTheme);
-
-    // Check for system preference if no saved preference
-    if (!localStorage.getItem('theme')) {
-      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-      if (prefersDarkScheme.matches) {
-        html.classList.add('dark');
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-        themeText.textContent = 'Light Mode';
-        localStorage.setItem('theme', 'dark');
-      }
-
-      // Listen for system preference changes
-      prefersDarkScheme.addEventListener('change', (e) => {
-        if (e.matches) {
-          html.classList.add('dark');
-          themeIcon.classList.remove('fa-moon');
-          themeIcon.classList.add('fa-sun');
-          themeText.textContent = 'Light Mode';
-          localStorage.setItem('theme', 'dark');
-        } else {
-          html.classList.remove('dark');
-          themeIcon.classList.remove('fa-sun');
-          themeIcon.classList.add('fa-moon');
-          themeText.textContent = 'Dark Mode';
-          localStorage.setItem('theme', 'light');
+      // create 30 profiles by varying role and avatar number
+      const profiles = Array.from({length:30}, (_,i) => {
+        const idx = i+1;
+        const skillsSet = [
+          ['HTML','CSS','JavaScript'],
+          ['React','Redux','TypeScript'],
+          ['Vue','Nuxt','JavaScript'],
+          ['Svelte','Tailwind','CSS'],
+          ['Design','Figma','UX']
+        ];
+        return {
+          id: uid(6),
+          name: base.name, // All profiles now have the same name
+          role: (i%5===0) ? 'Frontend Developer' : (i%5===1) ? 'UI Engineer' : (i%5===2) ? 'React Developer' : (i%5===3) ? 'Web Designer' : 'Fullstack Intern',
+          bio: base.bio,
+          skills: skillsSet[i%skillsSet.length],
+          avatar: `https://i.pravatar.cc/150?img=${(i%70)+1}`,
+          socials: base.socials
         }
       });
-    }
 
-    // Add fade-in animation to the card
-    document.addEventListener('DOMContentLoaded', () => {
-      const card = document.querySelector('.max-w-md');
-      card.classList.add('animate-fade-in');
-    });
-  </script>
-</body>
+      // Populate skill filter options (unique skills)
+      const allSkills = [...new Set(profiles.flatMap(p => p.skills))];
+      allSkills.forEach(s => {
+        const opt = document.createElement('option'); opt.value = s; opt.textContent = s; skillFilter.appendChild(opt);
+      });
 
-</html>
+      // Render cards
+      function render(list){
+        grid.innerHTML = '';
+        if(!list.length){ grid.innerHTML = '<p class="text-center col-span-full text-gray-600 dark:text-gray-300">No profiles found.</p>'; return }
+
+        list.forEach(p => {
+          const card = document.createElement('article');
+          card.className = 'tilt card-gradient rounded-2xl p-5 shadow-xl hover:shadow-2xl transition transform duration-300 bg-white dark:bg-gray-800';
+          card.innerHTML = `
+            <div class="flex items-center gap-4">
+              <div class="relative">
+                <img src="${p.avatar}" alt="${p.name}" class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-md" />
+                <span class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-green-500 border-2 border-white flex items-center justify-center text-white text-xs">✓</span>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold leading-5">${p.name}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300/80">${p.role}</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  ${p.skills.map(s=>`<span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100">${s}</span>`).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+              <div class="flex gap-3">
+                <a href="${p.socials.github}" class="text-gray-600 dark:text-gray-300 hover:text-blue-500" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="${p.socials.linkedin}" class="text-gray-600 dark:text-gray-300 hover:text-blue-500" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="${p.socials.twitter}" class="text-gray-600 dark:text-gray-300 hover:text-blue-500" title="Twitter"><i class="fab fa-twitter"></i></a>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button class="open-btn px-3 py-1 rounded-lg bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-sm">View</button>
+                <button class="copy-btn px-3 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-sm">Copy</button>
+              </div>
+            </div>
+          `;
+
+          // small entrance animation
+          card.classList.add('animate-fade-in');
+
+          // event listeners
+          card.querySelector('.open-btn').addEventListener('click',()=>openModal(p));
+          card.querySelector('.copy-btn').addEventListener('click', async ()=>{
+            await navigator.clipboard.writeText(JSON.stringify(p, null, 2));
+            const btn = event.currentTarget; btn.textContent = 'Copied'; btn.classList.add('animate-pop'); setTimeout(()=>{ btn.textContent = 'Copy'; btn.classList.remove('animate-pop'); }, 1000);
+          });
+
+          grid.appendChild(card);
+        });
+      }
+
+      // open modal
+      function openModal(p){
+        modalImg.src = p.avatar; modalName.textContent = p.name; modalRole.textContent = p.role; modalBio.textContent = p.bio;
+        modalTags.innerHTML = p.skills.map(s=>`<span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 mr-2">${s}</span>`).join(' ');
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+      }
+
+      modalClose.addEventListener('click', ()=>{ modal.classList.add('hidden'); modal.classList.remove('flex'); });
+      modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.add('hidden'); });
+
+      // initial render
+      render(profiles);
+
+      // Search & Filter
+      function applyFilters(){
+        const q = search.value.trim().toLowerCase();
+        const skill = skillFilter.value;
+        let filtered = profiles.filter(p=>{
+          const matchesQ = [p.name, p.role, p.bio, ...p.skills].join(' ').toLowerCase().includes(q);
+          const matchesSkill = (skill === 'all') ? true : p.skills.includes(skill);
+          return matchesQ && matchesSkill;
+        });
+        render(filtered);
+      }
+
+      search.addEventListener('input', applyFilters);
+      skillFilter.addEventListener('change', applyFilters);
+
+      // Shuffle
+      shuffleBtn.addEventListener('click', ()=>{
+        for(let i=profiles.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [profiles[i],profiles[j]]=[profiles[j],profiles[i]] }
+        applyFilters();
+      });
+
+      // Download JSON
+      downloadJSON.addEventListener('click', ()=>{
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(profiles, null, 2));
+        const a = document.createElement('a'); a.href = dataStr; a.download = 'profiles-30.json'; a.click();
+      });
+
+      // Theme handling (persistent & respects system)
+      const savedTheme = localStorage.getItem('theme') || null;
+      function applyTheme(t){
+        if(t === 'dark'){ html.classList.add('dark'); themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); themeText.textContent = 'Light Mode'; }
+        else { html.classList.remove('dark'); themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon'); themeText.textContent = 'Dark Mode'; }
+      }
+
+      if(savedTheme) applyTheme(savedTheme);
+      else {
+        const prefers = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(prefers ? 'dark' : 'light');
+      }
+
+      toggleBtn.addEventListener('click', ()=>{
+        const isDark = html.classList.contains('dark');
+        const next = isDark ? 'light' : 'dark';
+        applyTheme(next); localStorage.setItem('theme', next);
+      });
+
+      // Accessibility: close modal with Escape
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') modal.classList.add('hidden'); });
+
+      // Respect reduced motion
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ document.querySelectorAll('*').forEach(n=>n.style.transition='none'); }
+
+    </script>
+  </body>
+</html>< ! - -   P R   t e s t   - - >  
+ 
