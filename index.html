@@ -110,7 +110,7 @@
       </main>
 
       <!-- Modal (hidden by default) -->
-      <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4">
+      <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4" aria-modal="true" role="dialog" aria-labelledby="modal-name">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-xl w-full p-6">
           <div class="flex items-start gap-4">
             <div id="modal-img-container" class="w-20 h-20 rounded-full border-4 border-white dark:border-gray-900 shadow-lg img-placeholder flex-shrink-0">
@@ -122,7 +122,7 @@
               <p id="modal-bio" class="mt-3 text-sm text-gray-700 dark:text-gray-200">Bio</p>
               <div id="modal-tags" class="mt-3 flex flex-wrap gap-2"></div>
             </div>
-            <button id="modal-close" class="ml-2 text-gray-500 hover:text-gray-800 dark:hover:text-white"><i class="fas fa-xmark text-2xl"></i></button>
+            <button id="modal-close" class="ml-2 text-gray-500 hover:text-gray-800 dark:hover:text-white" aria-label="Close modal"><i class="fas fa-xmark text-2xl"></i></button>
           </div>
         </div>
       </div>
@@ -178,7 +178,7 @@
           bio: base.bio,
           skills: skillsSet[i%skillsSet.length],
           // Use local image path - user will replace with their own images
-           avatar: 'img/redwan.jpg',
+          avatar: 'img/redwan.jpg',
           socials: base.socials
         }
       });
@@ -192,7 +192,10 @@
       // Render cards
       function render(list){
         grid.innerHTML = '';
-        if(!list.length){ grid.innerHTML = '<p class="text-center col-span-full text-gray-600 dark:text-gray-300">No profiles found.</p>'; return }
+        if(!list.length){ 
+          grid.innerHTML = '<p class="text-center col-span-full text-gray-600 dark:text-gray-300">No profiles found.</p>'; 
+          return;
+        }
 
         list.forEach(p => {
           const card = document.createElement('article');
@@ -249,7 +252,12 @@
         });
       }
 
-      
+      // open modal
+      function openModal(p){
+        modalName.textContent = p.name; 
+        modalRole.textContent = p.role; 
+        modalBio.textContent = p.bio;
+        modalTags.innerHTML = p.skills.map(s=>`<span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 mr-2">${s}</span>`).join(' ');
         
         // Update modal image with error handling
         modalImgContainer.innerHTML = `
@@ -259,11 +267,24 @@
                onerror="this.onerror=null; this.src='img/placeholder.jpg';" />
         `;
         
-        modal.classList.remove('hidden'); modal.classList.add('flex');
+        modal.classList.remove('hidden'); 
+        modal.classList.add('flex');
+        
+        // Set focus to close button for accessibility
+        modalClose.focus();
       }
 
-      modalClose.addEventListener('click', ()=>{ modal.classList.add('hidden'); modal.classList.remove('flex'); });
-      modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.add('hidden'); });
+      modalClose.addEventListener('click', ()=>{ 
+        modal.classList.add('hidden'); 
+        modal.classList.remove('flex');
+      });
+      
+      modal.addEventListener('click', (e)=>{ 
+        if(e.target===modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      });
 
       // initial render
       render(profiles);
@@ -285,15 +306,28 @@
 
       // Shuffle
       shuffleBtn.addEventListener('click', ()=>{
-        for(let i=profiles.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [profiles[i],profiles[j]]=[profiles[j],profiles[i]] }
+        for(let i=profiles.length-1;i>0;i--){ 
+          const j = Math.floor(Math.random()*(i+1)); 
+          [profiles[i],profiles[j]]=[profiles[j],profiles[i]] 
+        }
         applyFilters();
       });
 
       // Theme handling (persistent & respects system)
       const savedTheme = localStorage.getItem('theme') || null;
       function applyTheme(t){
-        if(t === 'dark'){ html.classList.add('dark'); themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); themeText.textContent = 'Light Mode'; }
-        else { html.classList.remove('dark'); themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon'); themeText.textContent = 'Dark Mode'; }
+        if(t === 'dark'){ 
+          html.classList.add('dark'); 
+          themeIcon.classList.remove('fa-moon'); 
+          themeIcon.classList.add('fa-sun'); 
+          themeText.textContent = 'Light Mode'; 
+        }
+        else { 
+          html.classList.remove('dark'); 
+          themeIcon.classList.remove('fa-sun'); 
+          themeIcon.classList.add('fa-moon'); 
+          themeText.textContent = 'Dark Mode'; 
+        }
       }
 
       if(savedTheme) applyTheme(savedTheme);
@@ -305,14 +339,22 @@
       toggleBtn.addEventListener('click', ()=>{
         const isDark = html.classList.contains('dark');
         const next = isDark ? 'light' : 'dark';
-        applyTheme(next); localStorage.setItem('theme', next);
+        applyTheme(next); 
+        localStorage.setItem('theme', next);
       });
 
       // Accessibility: close modal with Escape
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') modal.classList.add('hidden'); });
+      document.addEventListener('keydown', (e)=>{ 
+        if(e.key === 'Escape') {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      });
 
       // Respect reduced motion
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ document.querySelectorAll('*').forEach(n=>n.style.transition='none'); }
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ 
+        document.querySelectorAll('*').forEach(n=>n.style.transition='none'); 
+      }
 
     </script>
   </body>
