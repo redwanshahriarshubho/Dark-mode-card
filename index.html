@@ -258,6 +258,11 @@
         modalRole.textContent = p.role; 
         modalBio.textContent = p.bio;
         modalTags.innerHTML = p.skills.map(s=>`<span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 mr-2">${s}</span>`).join(' ');
+      function openModal(p){
+        modalName.textContent = p.name; 
+        modalRole.textContent = p.role; 
+        modalBio.textContent = p.bio;
+        modalTags.innerHTML = p.skills.map(s=>`<span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 mr-2">${s}</span>`).join(' ');
         
         // Update modal image with error handling
         modalImgContainer.innerHTML = `
